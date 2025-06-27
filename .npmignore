@@ -1,0 +1,26 @@
+# Source files
+admin/src/
+server/src/
+
+# Config files
+rollup.config.mjs
+tsconfig.json
+admin/tsconfig.json
+admin/tsconfig.build.json
+server/tsconfig.json
+server/tsconfig.build.json
+
+# Development
+node_modules/
+.git/
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Misc
+.DS_Store
+*.log
