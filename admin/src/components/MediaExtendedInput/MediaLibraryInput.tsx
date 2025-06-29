@@ -5,8 +5,6 @@ import { CarouselInput, CarouselSlide } from '@strapi/design-system';
 import { useIntl } from 'react-intl';
 import { getTrad } from '../../utils/getTrad';
 import { getAllowedFiles, type AllowedFiles, type File } from '../../utils/getAllowedFiles';
-import { rawFileToAsset } from '../../utils/rawFileToAsset';
-import { AssetSource } from '../../constants';
 import { EmptyStateAsset } from './EmptyStateAsset';
 import { CarouselAsset } from './CarouselAsset';
 import { CarouselAssetActions } from './CarouselAssetActions';

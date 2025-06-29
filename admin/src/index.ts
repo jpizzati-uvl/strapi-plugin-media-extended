@@ -4,6 +4,9 @@ import { PluginIcon } from './components/PluginIcon';
 import { getTrad } from './utils/getTrad';
 import { prefixPluginTranslations } from './utils/prefixPluginTranslations';
 
+// Export components for use in other plugins
+export { MediaLibraryDialog } from './components/MediaExtendedInput/MediaLibraryDialog';
+
 // eslint-disable-next-line import/no-default-export
 export default {
   register(app: any) {
