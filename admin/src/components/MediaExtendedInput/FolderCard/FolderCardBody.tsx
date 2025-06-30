@@ -1,16 +1,19 @@
-import * as React from 'react';
-import { Box } from '@strapi/design-system';
+import { Flex, FlexProps } from '@strapi/design-system';
 import { styled } from 'styled-components';
 
-const StyledBox = styled(Box)`
-  flex: 1;
-  flex-shrink: 0;
+const StyledBox = styled(Flex)`
+  user-select: none;
 `;
 
-interface FolderCardBodyProps {
-  children: React.ReactNode;
-}
-
-export const FolderCardBody = ({ children }: FolderCardBodyProps) => {
-  return <StyledBox>{children}</StyledBox>;
+export const FolderCardBody = (props: FlexProps) => {
+  return (
+    <StyledBox
+      {...props}
+      alignItems="flex-start"
+      direction="column"
+      maxWidth="100%"
+      overflow="hidden"
+      position="relative"
+    />
+  );
 };

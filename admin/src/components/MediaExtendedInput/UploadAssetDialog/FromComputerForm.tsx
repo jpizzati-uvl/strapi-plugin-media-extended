@@ -103,7 +103,12 @@ export const FromComputerForm = ({ onClose, onAddAssets }: FromComputerFormProps
             onDrop={handleDrop}
           >
             <Flex direction="column" alignItems="center" gap={6}>
-              <PlusCircle width="3.2rem" height="3.2rem" />
+              <PlusCircle
+                aria-hidden
+                width="3.2rem"
+                height="3.2rem"
+                fill="primary600"
+              />
               <Flex direction="column" alignItems="center" gap={2}>
                 <Typography variant="delta" tag="span">
                   {formatMessage({

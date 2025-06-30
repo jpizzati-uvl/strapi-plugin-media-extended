@@ -245,7 +245,7 @@ export const BrowseStep = ({
       )}
 
       {breadcrumbs && breadcrumbs.length > 0 && currentFolder && (
-        <Box paddingTop={3}>
+        <Box paddingTop={3} paddingBottom={3}>
           <Breadcrumbs
             onChangeFolder={onChangeFolder}
             label={formatMessage({
