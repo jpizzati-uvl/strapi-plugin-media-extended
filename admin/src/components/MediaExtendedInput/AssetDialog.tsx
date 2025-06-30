@@ -246,7 +246,13 @@ export const AssetDialog = ({
             </Modal.Body>
           </TabsRoot>
         )}
-        <DialogFooter onClose={onClose} onValidate={() => onValidate(selectedAssets)} />
+        <DialogFooter onClose={onClose} onValidate={() => {
+          if (selectedAssets.length === 0) {
+            onClose();
+          } else {
+            onValidate(selectedAssets);
+          }
+        }} />
       </Modal.Content>
       
       {/* Edit Asset Dialog */}

@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-media-extended",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Extended media field plugin for Strapi with enhanced features",
   "repository": {
     "type": "git",
