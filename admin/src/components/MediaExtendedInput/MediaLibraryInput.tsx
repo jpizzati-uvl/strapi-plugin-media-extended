@@ -8,19 +8,12 @@ import { getAllowedFiles, type AllowedFiles, type File } from '../../utils/getAl
 import { EmptyStateAsset } from './EmptyStateAsset';
 import { CarouselAsset } from './CarouselAsset';
 import { CarouselAssetActions } from './CarouselAssetActions';
-import { AssetDialog } from './AssetDialog';
-import { UploadAssetDialog } from './UploadAssetDialog';
-import { EditFolderDialog } from './EditFolderDialog';
+import { MediaLibraryDialog } from './MediaLibraryDialog';
 import { EditAssetDialog } from './EditAssetDialog';
 
 type AllowedTypes = 'files' | 'images' | 'videos' | 'audios';
 type FileWithoutIdHash = Omit<File, 'id' | 'hash'>;
 
-const STEPS = {
-  AssetSelect: 'SelectAsset',
-  AssetUpload: 'UploadAsset',
-  FolderCreate: 'FolderCreate',
-};
 
 export interface MediaLibraryInputProps {
   required?: boolean;
@@ -62,10 +55,8 @@ export const MediaLibraryInput = React.forwardRef<HTMLDivElement, MediaLibraryIn
     const { formatMessage } = useIntl();
     const field = useField(name);
     const { value, error } = field;
-    const [step, setStep] = React.useState<string | undefined>(undefined);
+    const [showMediaLibrary, setShowMediaLibrary] = React.useState(false);
     const [selectedIndex, setSelectedIndex] = React.useState(0);
-    const [folderId, setFolderId] = React.useState<number | null>(null);
-    const [droppedAssets, setDroppedAssets] = React.useState<FileWithoutIdHash[]>();
     const [isEditingAsset, setIsEditingAsset] = React.useState(false);
     const { toggleNotification } = useNotification();
 
@@ -77,18 +68,26 @@ export const MediaLibraryInput = React.forwardRef<HTMLDivElement, MediaLibraryIn
       selectedAssets = [value];
     }
 
-    const handleValidation = (nextSelectedAssets: File[]) => {
+    const handleSelectAssets = (nextSelectedAssets: File[]) => {
       const newValue = multiple ? nextSelectedAssets : nextSelectedAssets[0];
       field.onChange(name, newValue);
-      setStep(undefined);
+      setShowMediaLibrary(false);
     };
 
     const handleAssetDrop = (assets: FileWithoutIdHash[]) => {
       const allowedAssets = getAllowedFiles(allowedTypes, assets as AllowedFiles[]);
       
       if (allowedAssets.length > 0) {
-        setDroppedAssets(allowedAssets);
-        setStep(STEPS.AssetUpload);
+        // For now, we'll just show a notification that drag-drop isn't supported
+        // This could be enhanced to handle dropped assets through the MediaLibraryDialog
+        toggleNotification({
+          type: 'info',
+          timeout: 4000,
+          message: formatMessage({
+            id: getTrad('input.notification.drag-drop'),
+            defaultMessage: 'Please click to select files',
+          }),
+        });
       } else {
         toggleNotification({
           type: 'danger',
@@ -161,7 +160,7 @@ export const MediaLibraryInput = React.forwardRef<HTMLDivElement, MediaLibraryIn
                   <CarouselAssetActions
                     asset={currentAsset}
                     onDeleteAsset={disabled ? undefined : handleDeleteAsset}
-                    onAddAsset={disabled ? undefined : () => setStep(STEPS.AssetSelect)}
+                    onAddAsset={disabled ? undefined : () => setShowMediaLibrary(true)}
                     onEditAsset={disabled ? undefined : () => setIsEditingAsset(true)}
                   />
                 ) : undefined
@@ -179,7 +178,7 @@ export const MediaLibraryInput = React.forwardRef<HTMLDivElement, MediaLibraryIn
                 >
                   <EmptyStateAsset
                     disabled={disabled}
-                    onClick={() => !disabled && setStep(STEPS.AssetSelect)}
+                    onClick={() => !disabled && setShowMediaLibrary(true)}
                     onDropAsset={handleAssetDrop}
                   />
                 </CarouselSlide>
@@ -201,61 +200,14 @@ export const MediaLibraryInput = React.forwardRef<HTMLDivElement, MediaLibraryIn
               )}
         </CarouselInput>
 
-        {step === STEPS.AssetSelect && (
-          <AssetDialog
-            allowedTypes={allowedTypes}
-            folderId={folderId}
-            onClose={() => {
-              setStep(undefined);
-              setFolderId(null);
-            }}
-            open={step === STEPS.AssetSelect}
-            onValidate={handleValidation}
-            multiple={multiple}
-            onAddAsset={() => setStep(STEPS.AssetUpload)}
-            onAddFolder={() => setStep(STEPS.FolderCreate)}
-            onChangeFolder={(folder) => setFolderId(folder)}
-            initiallySelectedAssets={selectedAssets}
-          />
-        )}
-        
-        {step === STEPS.AssetUpload && (
-          <UploadAssetDialog
-            open={step === STEPS.AssetUpload}
-            onClose={() => {
-              setStep(STEPS.AssetSelect);
-              setDroppedAssets(undefined);
-            }}
-            addUploadedFiles={(uploadedAssets) => {
-              const newAssets = multiple 
-                ? [...selectedAssets, ...(uploadedAssets as File[])]
-                : (uploadedAssets as File[]).slice(0, 1);
-              handleValidation(newAssets);
-            }}
-            initialAssetsToAdd={droppedAssets?.map(asset => ({
-              id: (asset as any).id,
-              name: asset.name,
-              url: asset.url,
-              mime: asset.mime,
-              size: asset.size,
-              ext: asset.ext || undefined,
-              width: asset.width || undefined,
-              height: asset.height || undefined,
-              rawFile: (asset as any).rawFile,
-              isLocal: true,
-              tempId: `${Date.now()}-${Math.random()}`,
-            }))}
-            folderId={folderId}
-          />
-        )}
-        
-        {step === STEPS.FolderCreate && (
-          <EditFolderDialog
-            open={step === STEPS.FolderCreate}
-            onClose={() => setStep(STEPS.AssetSelect)}
-            parentFolderId={folderId}
-          />
-        )}
+        <MediaLibraryDialog
+          open={showMediaLibrary}
+          onClose={() => setShowMediaLibrary(false)}
+          onSelectAssets={handleSelectAssets}
+          multiple={multiple}
+          allowedTypes={allowedTypes}
+          selectedAssets={selectedAssets}
+        />
         
         <EditAssetDialog
           open={isEditingAsset}

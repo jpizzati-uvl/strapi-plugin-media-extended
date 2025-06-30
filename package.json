@@ -7,16 +7,7 @@
     "url": "https://github.com/yourusername/strapi-plugin-media-extended.git"
   },
   "license": "MIT",
-  "author": {
-    "name": "Your Name",
-    "email": "your.email@example.com"
-  },
-  "maintainers": [
-    {
-      "name": "Your Name",
-      "email": "your.email@example.com"
-    }
-  ],
+  "author": "Jorge Pizzati <jorge.pizzati@uvltd.tech>",
   "exports": {
     "./strapi-admin": {
       "types": "./dist/admin/src/index.d.ts",

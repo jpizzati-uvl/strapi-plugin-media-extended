@@ -28,7 +28,7 @@ export const MediaLibraryDialog = ({
   allowedTypes = null,
   selectedAssets: initiallySelectedAssets = [],
 }: MediaLibraryDialogProps) => {
-  const [step, setStep] = React.useState<string | undefined>(STEPS.AssetSelect);
+  const [step, setStep] = React.useState<string | undefined>(undefined);
   const [folderId, setFolderId] = React.useState<number | null>(null);
   const [uploadedAssets, setUploadedAssets] = React.useState<any[]>([]);
 
@@ -37,10 +37,12 @@ export const MediaLibraryDialog = ({
     if (open) {
       setStep(STEPS.AssetSelect);
       setUploadedAssets([]);
+    } else {
+      setStep(undefined);
     }
   }, [open]);
 
-  if (!open && !step) return null;
+  if (!open) return null;
 
   const handleClose = () => {
     setStep(undefined);
